@@ -38,9 +38,11 @@ const FillInformation = () => {
   const [finalPriceAfterReduce,setFinalPriceAfterReduce] = useState('');
   const navigate = useNavigate();
   
+  console.log("jh",paymentMethod)
 
   const handleConfirm = () => {
-    const ticketData = {
+    if(paymentMethod === "VNP"){
+      const ticketData = {
         email: email,
         selectedSeat: selectedSeats,
         phone: phone,
@@ -56,6 +58,25 @@ const FillInformation = () => {
         .catch(error => {
             console.error('Error sending data:', error);
         });
+    }else{
+      const ticketData = {
+        email: email,
+        selectedSeat: selectedSeats,
+        phone: phone,
+        cccd:cccd,
+        fullName:fullName
+    };
+
+    axios.post('http://localhost:8080/saveTicketAndCustomer', ticketData)
+        .then(response => {
+            console.log('Data sent successfully:', response.data);
+            navigate("/confirm-information")
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+        });
+    }
+    
 };
 
   useEffect(()=>{
@@ -87,6 +108,10 @@ const FillInformation = () => {
   useEffect(()=>{
     localStorage.setItem("finalPriceAfterReduce",JSON.stringify(finalPriceAfterReduce));
   },[finalPriceAfterReduce]);
+
+  useEffect(()=>{
+    localStorage.setItem("PaymentMethod",JSON.stringify(paymentMethod));
+  },[paymentMethod]);
 
   const handleBack = () => {
     navigate("/train-result");
@@ -407,12 +432,12 @@ const FillInformation = () => {
                 </td>
                 <td className="border-r-2 border-slate-100">
                   <h3 className="text-lg text-center justify-center">
-                    {finalReduce() + "$"}
+                    {finalReduce()}
                   </h3>
                 </td>
                 <td className="border-r-2 border-slate-100">
                   <h3 className="text-lg text-center justify-center">
-                    {finalPrice() + "$"}
+                    {finalPrice()}
                   </h3>
                 </td>
               </tr>
@@ -550,57 +575,6 @@ const FillInformation = () => {
         <tbody>
           <tr className="flex flex-col ">
             <td className="flex flex-row m-4 border-t-2  border-customBlue rounded-tl rounded-tr">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="napas"
-                checked={paymentMethod === "napas"}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                ref={paymentMethodRef}
-                className="mr-4"
-              ></input>
-              <img
-                src="logo-dvtt-SML.png"
-                alt="By ATM"
-                className="rounded-tl-none rounded-bl-none rounded mr-4"
-              />
-              <div className="flex flex-col justify-center">
-                <p className="font-medium text-customBlue">
-                  Online payments through the Napas payment gateway
-                </p>
-                <div className="flex flex-col md:flex md:flex-row">
-                  <button className="flex flex-row items-center mr-2">
-                    <input
-                      value="domestic"
-                      checked={atmCard === "domestic"}
-                      onChange={(e) => setAtmCard(e.target.value)}
-                      type="radio"
-                      name="atmCard"
-                    />
-                    <img
-                      src="the-noi-dia.png"
-                      alt="By ATM"
-                      className="rounded-tl-none rounded-bl-none rounded"
-                    />
-                    <p>Domestic ATM card (supports Internet Banking)</p>
-                  </button>
-                  <button className="flex flex-row items-center">
-                    <input
-                      value="international"
-                      checked={atmCard === "international"}
-                      onChange={(e) => setAtmCard(e.target.value)}
-                      type="radio"
-                      name="atmCard"
-                    />
-                    <img
-                      src="the-quoc-te-no-jcb.png"
-                      alt="By ATM"
-                      className="rounded-tl-none rounded-bl-none rounded"
-                    />
-                    <p>International ATM card</p>
-                  </button>
-                </div>
-              </div>
             </td>
             <td className="flex flex-row m-4 items-center">
               <input
@@ -618,42 +592,6 @@ const FillInformation = () => {
               />
               <p className="font-medium text-customBlue">
                 Online payments through the VNPay payment gateway
-              </p>
-            </td>
-            <td className="flex flex-row m-4 items-center">
-              <input
-                value="momo"
-                checked={paymentMethod === "momo"}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                type="radio"
-                name="paymentMethod"
-                className="mr-5"
-              ></input>
-              <img
-                src="logo-dvtt-MOM.png"
-                alt="By Momo"
-                className="rounded-tl-none rounded-bl-none rounded mr-8"
-              />
-              <p className="font-medium text-customBlue">
-                Online payments through the MoMo digital wallet
-              </p>
-            </td>
-            <td className="flex flex-row m-4 items-center">
-              <input
-                value="ZLP"
-                checked={paymentMethod === "ZLP"}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                type="radio"
-                name="paymentMethod"
-                className="mr-5"
-              ></input>
-              <img
-                src="logo-dvtt-ZLP.png"
-                alt="By ATM"
-                className="rounded-tl-none rounded-bl-none rounded mr-8"
-              />
-              <p className="font-medium text-customBlue">
-                Online payments through the ZaloPay digital wallet
               </p>
             </td>
             <td className="flex flex-row m-4 items-center border-b-2  border-customBlue rounded-bl rounded-br">

@@ -16,14 +16,17 @@ import ConfirmPayTicket from "./components/PayTicket/Confirm/ConfirmPayTicket.js
 import Pay from "./components/PayTicket/Pay/Pay.jsx";
 import AuthProvider from "./components/context/AuthProvider.jsx";
 import Done from "./components/PayTicket/Pay/Done.jsx";
+import UserManagement from "./components/admin/UserManagement.jsx";
 
 function App() {
+
+
   return (
     <AuthProvider>
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -32,15 +35,19 @@ function App() {
           <Route path="/train-result" element={<TrainResult />} />
           <Route path="/fill-information" element={<FillInformation />} />
           <Route path="/confirm-information" element={<ConfirmInformation />} />
+          {/* <Route path="/payLaterSuccessful" element={<PayLater/>}/> */}
           <Route path="/bookingInformation" element={<InformationBooking />} />
           <Route path="/forgot-booking-code" element={<ForgotBookingCode />} />
           <Route path="/pay-ticket/confirm" element={<ConfirmPayTicket />} />
           <Route path="/pay-ticket/payTicket" element={<Pay />} />
-          <Route path="/successful" element={<Done/>} />
+          <Route path="/successful" element={<Done />} />
+          <Route path="/admin" element={<UserManagement />} />
         </Routes>
+       
       </BrowserRouter>
     </AuthProvider>
   );
 }
 
 export default App;
+

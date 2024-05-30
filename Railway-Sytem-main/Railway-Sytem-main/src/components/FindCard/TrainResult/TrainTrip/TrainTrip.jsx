@@ -17,7 +17,7 @@ const TrainTrip = ({
           );
           const { date: endDate, time: endTime } = extractDateAndTime(
             item.dateEnd, 
-            item.timeStart
+            item.timeEnd
           );
           return (
             <div
@@ -36,7 +36,7 @@ const TrainTrip = ({
               <div className="flex bg-white self-center flex-col p-1 rounded">
                 <div className="flex flex-row justify-between gap-8">
                   <div>
-                    <span className="font-semibold	">Start</span>
+                    <span className="font-semibold	">Start:</span>
                   </div>
                   <div>
                     <span style={{ fontSize: "9px" }}>
@@ -47,11 +47,11 @@ const TrainTrip = ({
 
                 <div className="flex flex-row justify-between gap-10">
                   <div>
-                    <span className="font-semibold	">End</span>
+                    <span className="font-semibold	">End:</span>
                   </div>
                   <div>
                     <span style={{ fontSize: "9px" }}>
-                      {endDate} {endTime}
+                      {endDate} {endTime} 
                     </span>
                   </div>
                 </div>
@@ -59,7 +59,7 @@ const TrainTrip = ({
                 <div className="flex flex-row gap-7 mt-1">
                   <div>
                     <div>
-                      <span className="font-semibold	">Ordered</span>
+                      <span className="font-semibold	">Ordered:</span>
                     </div>
                     <div>
                       <span style={{ fontSize: "9px" }}>{item.ordered}</span>
@@ -67,7 +67,7 @@ const TrainTrip = ({
                   </div>
                   <div>
                     <div>
-                      <span className="font-semibold	">Empty</span>
+                      <span className="font-semibold	">Empty:</span>
                     </div>
                     <div>
                       <span style={{ fontSize: "9px" }}> {item.emptys}</span>

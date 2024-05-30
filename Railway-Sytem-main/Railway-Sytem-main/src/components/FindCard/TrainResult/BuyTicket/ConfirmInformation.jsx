@@ -9,8 +9,8 @@ import axios from 'axios';
 const ConfirmInfo = () => {
 
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [finalPriceAfterReduce,setFinalPriceAfterReduce] = useState();
-  const [payment,setPayMent] = useState('');
+  const [finalPriceAfterReduce, setFinalPriceAfterReduce] = useState();
+  const [payment, setPayMent] = useState('');
 
   const navigate = useNavigate();
   const handleBack = () => {
@@ -18,15 +18,25 @@ const ConfirmInfo = () => {
   };
 
   const handlePayment = async () => {
-    try {
-      const amount = finalPriceAfterReduce;
-      const url = `http://localhost:8080/pay?amount=${amount}`;
-      const response = await axios.post(url);
-      const paymentUrl = response.data;
-      window.location.href = paymentUrl;
-    } catch (err) {
-      console.error("Error:", err);
+    const paymentMethod = localStorage.getItem("PaymentMethod");
+    const amount = finalPriceAfterReduce;
+    if (paymentMethod === "PayLater") {
+      navigate("/successful");
+    } else {
+      try {
+        const url = `http://localhost:8080/pay?amount=${amount}`;
+        const response = await axios.post(url);
+        const paymentUrl = response.data;
+        window.location.href = paymentUrl;
+      } catch (err) {
+        console.error("Error:", err);
+      }
     }
+   
+
+
+
+
   };
 
 
@@ -74,7 +84,7 @@ const ConfirmInfo = () => {
     ));
   };
 
-  
+
   return (
     <Container>
       <div className="flex justify-center ">
@@ -170,7 +180,7 @@ const ConfirmInfo = () => {
                       className="border-b-2 rounded-bl px-4 py-4 border-customBlue"
                     >
                       <p className="text-l mr-4  font-bold text-black text-right">
-                        
+
                       </p>
                     </td>
                     <td

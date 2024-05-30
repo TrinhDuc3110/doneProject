@@ -20,16 +20,6 @@ public class users {
     @Column(name = "email")
     private String email;
 
-//    @OneToMany(mappedBy = "user")
-//    private Set<ticket> ListTickets;
-//
-//    public Set<ticket> getListTickets() {
-//        return ListTickets;
-//    }
-//
-//    public void setListTickets(Set<ticket> listTickets) {
-//        ListTickets = listTickets;
-//    }
 
     public int getUser_id() {
         return user_id;

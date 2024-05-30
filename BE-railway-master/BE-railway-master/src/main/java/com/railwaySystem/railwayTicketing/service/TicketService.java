@@ -21,4 +21,5 @@ public class TicketService {
     public List<Ticket> getTicketsByCustomerEmailAndPhone(String email, String phone) {
         return ticketRepository.findByCustomer_EmailAndCustomer_Phone(email, phone);
     }
+
 }

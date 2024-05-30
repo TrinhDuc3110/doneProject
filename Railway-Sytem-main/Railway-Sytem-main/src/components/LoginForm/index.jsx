@@ -1,57 +1,74 @@
 import { Container, Heading, Form, NavLink, Button } from "./LoginFormElement";
 import Axios from "axios";
-import { useContext, useState } from "react";
-
-import { Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaGooglePlusG } from "react-icons/fa";
 import { MdOutlineMail } from "react-icons/md";
-import { FaRegEye } from "react-icons/fa6";
-import { FaRegEyeSlash } from "react-icons/fa6";
-// import { FaRegEye } from "react-icons/fa";
-// import { FaRegEyeSlash } from "react-icons/fa";
-
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [showErrorMessage, setShowErrorMessage] = useState('');
 
-  const handleSignIn = (e) => { 
+  const handleSignInUser = async (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:8080/login/signin', {
-      username: email,
-      password: password
-    })
-    .then(response => {
-      let found = false;
-      for(var item in response.data){
-        if (email === response.data[item].email && password === response.data[item].password) {
-          found = true;
+    try {
+      const response = await Axios.post('http://localhost:8080/login/signin', {
+        username: email,
+        password: password
+      });
+      
+      let foundUser = false;
+      for (let item of response.data) {
+        if (email === item.email && password === item.password) {
+          foundUser = true;
           navigate("/home");
           break;
         }
       }
-      if (!found) {
+      
+      if (!foundUser) {
         setShowErrorMessage('Wrong email or password');
-
       }
-    })
-    .catch(error => {
-      console.error('Đã xảy ra lỗi:', error);
-    });
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
   };
 
+  const handleSignInAdmin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await Axios.post('http://localhost:8080/loginAdmin/signin', {
+        username: email,
+        password: password
+      });
+      
+      let foundAdmin = false;
+      for (let item of response.data) {
+        if (email === item.email && password === item.password) {
+          foundAdmin = true;
+          navigate("/admin");
+          break;
+        }
+      }
+      
+      if (!foundAdmin) {
+        setShowErrorMessage('Wrong email or password');
+      }
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
+  };
 
   return (
-    
     <div className="flex flex-col pt-20 pr-20">
       <Container>
         <Heading>
           <h2 className="text-gray-50 text-center text-3xl">User Login</h2>
         </Heading>
-
         <Form className="flex flex-col gap-5">
           <div className="flex flex-col gap-1">
             <label className="p-0">Email</label>
@@ -63,7 +80,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <MdOutlineMail
-              class="mail-icon"
+              className="mail-icon"
               style={{
                 position: "absolute",
                 top: "38.5%",
@@ -71,9 +88,8 @@ function LoginForm() {
               }}
             />
           </div>
-
           <div className="relative flex flex-col gap-1">
-            <label className=" p-0">Password</label>
+            <label className="p-0">Password</label>
             <input
               className="h-10 pl-3 border border-gray-950 rounded-md mb-2 pr-10"
               type={!showPassword ? "password" : "text"}
@@ -82,7 +98,6 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
             />
             {showErrorMessage && <div style={{ color: 'red' }}>{showErrorMessage}</div>}
-
             {showPassword ? (
               <FaRegEyeSlash
                 className="eye-icon"
@@ -105,19 +120,22 @@ function LoginForm() {
               />
             )}
           </div>
-          <div className="flex justify-end underline text-blue-300 cursor-pointer hover:text-blue-500">
-            Forgot password?{" "}
-          </div>
-
           <Button
             style={{
               alignSelf: "center",
             }}
-            onClick={handleSignIn}
+            onClick={handleSignInUser}
           >
-            Sign in
+            Sign in as User
           </Button>
-
+          <Button
+            style={{
+              alignSelf: "center",
+            }}
+            onClick={handleSignInAdmin}
+          >
+            Sign in as Admin
+          </Button>
           <div className="flex flex-row gap-2 justify-center">
             <div
               style={{
@@ -127,7 +145,6 @@ function LoginForm() {
                 alignSelf: "center",
               }}
             />
-
             <text className="text-gray-950 text-center">Or</text>
             <div
               style={{
@@ -138,7 +155,6 @@ function LoginForm() {
               }}
             />
           </div>
-
           <div className="flex justify-center font-thin ">
             <span>Are you new?</span>
             <NavLink

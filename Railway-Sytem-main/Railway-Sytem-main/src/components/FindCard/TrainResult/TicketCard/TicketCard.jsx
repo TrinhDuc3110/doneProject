@@ -54,7 +54,7 @@ const TicketCard = ({
                 </div>
                 <div className="flex flex-row gap-1 text-xs">
                   <div>
-                    <span>Price: {seat.price}$</span>
+                    <span>Price: {seat.price}</span>
                   </div>
                 </div>
               </div>

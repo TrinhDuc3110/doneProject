@@ -12,5 +12,4 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByCustomer_EmailAndCustomer_Phone(String email, String phone);
 
-
 }

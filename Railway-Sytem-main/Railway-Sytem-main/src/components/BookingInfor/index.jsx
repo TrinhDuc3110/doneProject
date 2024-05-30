@@ -2,6 +2,8 @@ import { useState } from "react";
 import Axios from "axios";
 import { Item, Input } from "./BookingInforElement";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -13,6 +15,8 @@ const BookingInfor = () => {
   const [cccd, setCCCD] = useState("");
   const [showTicketInfor, setShowTicketInfor] = useState(false);
   const [tickets, setTickets] = useState([]);
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const pressedVerify = async () => {
@@ -21,11 +25,10 @@ const BookingInfor = () => {
         params: {
           email: email,
           phone: mobileNo,
-          fullName:fullName,
-          cccd:cccd
+          fullName: fullName,
+          cccd: cccd
         },
       });
-      console.log("hihi",response.data);
       setTickets(response.data);
       setShowTicketInfor(true);
     } catch (error) {
@@ -34,8 +37,23 @@ const BookingInfor = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await Axios.delete(`http://localhost:8080/tickets/${id}`);
+      setTickets(tickets.filter(ticket => ticket.id !== id));
 
-  console.log("Hih", tickets)
+      setShowDeleteSuccess(true);
+
+      setTimeout(() => {
+        setShowDeleteSuccess(false);
+      }, 1500);
+
+    } catch (error) {
+      console.log(error);
+      alert("Error deleting ticket");
+    }
+  };
+
 
   return (
     <div
@@ -203,18 +221,26 @@ const BookingInfor = () => {
               Amount (VND){" "}
             </Item>
             <Item style={{ backgroundColor: "#eeeeee", textAlign: "center" }}>
-              Status
+              CANCELLATION OF TICKETS
             </Item>
-            {tickets.map((ticket) => (
+            {tickets.map((ticket, n = 1) => (
               <>
-                <Item>{ticket.id}</Item>
+                <Item>{n++}</Item>
                 <Item>{ticket.fromStation}</Item>
                 <Item>{ticket.toStation}</Item>
                 <Item>{ticket.nameCar}</Item>
                 <Item>{ticket.seatName}-{ticket.seatIndex}</Item>
                 <Item>{ticket.timeStart}</Item>
                 <Item>{ticket.price}</Item>
-                <Item>{ticket.status}</Item>
+                <Item>
+                  <button style={{
+                    color: "white",
+                    padding: "12% 30%",
+                    backgroundColor: "red",
+                    display: "flex",
+                    flexDirection: "column",
+                  }} onClick={() => handleDelete(ticket.id)}>Delete</button>
+                </Item>
               </>
             ))}
           </div>
@@ -236,6 +262,7 @@ const BookingInfor = () => {
               Chúng tôi phục vụ quý khách 24 giờ trong ngày và 7 ngày trong
               tuần.
             </span>
+
           </div>
 
           <span
@@ -339,7 +366,17 @@ const BookingInfor = () => {
           </div>
         </div>
       )}
+       {showDeleteSuccess && (
+        <div className="modal" style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+          <div className="modal-content" style={{ backgroundColor: "#fff", padding: "40px", borderRadius: "10px", maxWidth: "500px", textAlign: "center", position: "relative" }}>
+            <span className="close" onClick={() => setShowDeleteSuccess(false)} style={{ position: "absolute", top: "10px", right: "10px", cursor: "pointer" }}><FontAwesomeIcon icon={faTimes} /></span>
+            <FontAwesomeIcon icon="check-circle" size="3x" style={{ color: 'green', marginBottom: "20px" }} />
+            <p style={{ fontSize: "20px", fontWeight: "bold" }}>Ticket deleted successfully!</p>
+          </div>
+        </div>
+      )}
     </div>
+
   );
 };
 export default BookingInfor;

@@ -84,7 +84,7 @@ const RegistrationForm = () => {
         setSuccessMessage('Registration successful! Redirecting to login page...');
         setTimeout(() => {
           navigate("/login");
-        }, 3000); // Redirect after 3 seconds
+        }, 1000);
       })
       .catch((error) => {
         console.log(error.data);
